@@ -17,6 +17,7 @@ export default gql`
     languages: [Language]
     emoji: String
     emojiU: String
+    isFavorite: Boolean
   }
 
   type Language {
@@ -33,5 +34,10 @@ export default gql`
     country(code: String): Country
     languages: [Language]
     language(code: String): Language
+  }
+
+  type Mutation {
+    markAsFavorite(code: String) : Country
+    unmarkAsFavorite(code: String) : Country
   }
 `;

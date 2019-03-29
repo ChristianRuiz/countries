@@ -1,5 +1,14 @@
+const favoriteCountries = {};
+
 function byCode(code) {
   return item => item.code === code;
+}
+
+function mapCountry(country) {
+  return {
+    ...country,
+    isFavorite: favoriteCountries[country.code] || false
+  };
 }
 
 export default {
@@ -11,15 +20,25 @@ export default {
   },
   Continent: {
     countries: (continent, args, {countries}) =>
-      countries.filter(country => country.continent === continent.code)
+    countries.filter(country => country.continent === continent.code).map(mapCountry)
   },
   Query: {
     continent: (parent, args, {continents}) =>
       continents.find(byCode(args.code)),
     continents: (parent, args, {continents}) => continents,
-    country: (parent, args, {countries}) => countries.find(byCode(args.code)),
-    countries: (parent, args, {countries}) => countries,
+    country: (parent, args, {countries}) => mapCountry(countries.find(byCode(args.code))),
+    countries: (parent, args, {countries}) => countries.map(mapCountry),
     language: (parent, args, {languages}) => languages.find(byCode(args.code)),
     languages: (parent, args, {languages}) => languages
+  },
+  Mutation: {
+    markAsFavorite: (parent, args, {countries}) => {
+      favoriteCountries[args.code] = true;
+      return mapCountry(countries.find(byCode(args.code)));
+    },
+    unmarkAsFavorite: (parent, args, {countries}) => {
+      favoriteCountries[args.code] = false;
+      return mapCountry(countries.find(byCode(args.code)));
+    }
   }
 };
