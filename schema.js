@@ -30,14 +30,14 @@ export default gql`
   type Query {
     continents: [Continent]
     continent(code: String): Continent
-    countries: [Country]
+    countries(offset: Int, first: Int): [Country]
     country(code: String): Country
     languages: [Language]
     language(code: String): Language
   }
 
   type Mutation {
-    markAsFavorite(code: String) : Country
-    unmarkAsFavorite(code: String) : Country
+    markAsFavorite(code: String): Country
+    unmarkAsFavorite(code: String): Country
   }
 `;
